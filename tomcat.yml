@@ -1,0 +1,60 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/name: tomcat
+  name: tomcat
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: tomcat
+  name: tomcat
+spec:
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+    type: RollingUpdate
+  minReadySeconds: 10
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 3
+  minReadySeconds: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: tomcat
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: tomcat
+    spec:
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      serviceAccountName: tomcat
+      containers:
+      - name: tomcat
+        image: jino/tscout_candidate_graph:v1.0
+        imagePullPolicy: "IfNotPresent"
+        ports:
+        - containerPort: 8080
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: tomcat
+  name: tomcat
+spec:
+  type: LoadBalancer
+  selector:
+    app.kubernetes.io/name: tomcat
+  ports:
+    - port: 80
+      targetPort: 8080
