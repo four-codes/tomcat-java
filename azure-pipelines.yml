@@ -11,7 +11,6 @@ resources:
 variables:
   repositoryName: acriodemoslockdev.azurecr.io
   imageName: api-one
-  unitimageName: api-one-unit
 
 pool: 
   name: miga
