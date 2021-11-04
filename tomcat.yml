@@ -38,7 +38,7 @@ spec:
       serviceAccountName: tomcat
       containers:
       - name: tomcat
-        image: jino/tscout_candidate_graph:v1.0
+        image: containerImageName
         imagePullPolicy: "IfNotPresent"
         ports:
         - containerPort: 8080
